@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div>
+    <div style="text-align: center">
+        <form action="/" method="post">
+            <button type="submit" name="register" id="register1" class="btn btn-light homebuttons">Register</button>
+
+            <button type="submit" name="login" id="login1" class="btn btn-light homebuttons" style="margin-left: 5rem">Login</button>
+        </form>
+    </div>
+    <p class="paragraph1 display-6"> 
+        Discover new recipes to integrate into your home recipe book. Optimized for your health with filters for ceritian allergies and diets. Utilizing Spoontacular API every recipe provided will be compatible with your user profile settings. Desktop and Mobile friendly!
+    </p>
+</div>
+<div class="mb-5 small text-center text-muted">
+    Data provided by <a href="https://spoonacular.com/">Spoonacular</a>
+</div>
+{% endblock %}
+
+

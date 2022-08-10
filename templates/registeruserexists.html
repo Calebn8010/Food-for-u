@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<nav class="navbar bg-light fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-semibold" href="#">Food for You</a>
+    </div>
+</nav>
+
+<div class="alert alert-primary d-flex align-items-center row mb-3 alert1" role="alert">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </svg>
+  <div>
+     Username already taken, please try again
+  </div>
+</div>
+
+<form action ="/register" method ="post" class="position-absolute top-50 start-50 translate-middle needs-validation" novalidate oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
+    <div class="row mb-3">
+      <div class="form-outline">
+        <input type="username" class="form-control" name="username" placeholder="Username" id="validationCustom01" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please choose a username.</div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="form-outline">
+        <input type="password" class="form-control" name="password" placeholder="Password" id="validationCustom02" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please choose a password.</div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="form-outline" id = validationCustom003>
+        <input type="password" class="form-control" name="password2" placeholder="Verify Password" id="validationCustom03" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter a matching password.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary cstbutton" style="text-align: center;">Register</button>
+</form>
+
+<script>
+  (() => {
+    'use strict';
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.needs-validation');
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms).forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+  </script>
+
+
+{% endblock %}

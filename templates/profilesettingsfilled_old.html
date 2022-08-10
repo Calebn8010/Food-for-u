@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div>
+    <p class="paragraph1 display-6"> 
+        {{user}}'s Food Profile Settings
+    </p>
+    <form action ="/profile" method ="post">
+        <div action ="/profile" method ="post" class="container" >
+            <p>
+                Allergies:
+            </p>
+            {% for item in allergies %}
+            <div class="form-check">
+                {% if item["checked"] %}
+                <input class="form-check-input" type="checkbox" name="{{item[allergy]}}" value="" id="defaultCheck1" checked>
+                {% else %}
+                <input class="form-check-input" type="checkbox" name={{item[allergy]}} value="" id="defaultCheck1" >
+                {% endif %}
+                <label class="form-check-label" for="defaultCheck1">
+                    {{item["allergy"]}}
+                </label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary savebutton">Save</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

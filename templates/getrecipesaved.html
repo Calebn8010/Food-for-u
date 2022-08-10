@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div style="text-align: center">
+    <p class="paragraph1 display-6"> 
+        Get Recipe!!
+    </p>
+    <h6 class="container">
+      Retreive one of thousands up to date recipes that will take into account your current profile settings. Input a cusine type to narrow recipes to a certain country / culture such as American or Chinese. Leave cusine type blank and you can get a new dish from any country / culture.
+    </h6>
+    
+    <form action ="/getrecipe" method ="post">
+        <div action ="/getrecipe" method ="post" class="container" >
+            <input class="form-control mx-auto w-auto savebutton" type="text" placeholder="Cuisine type" aria-label="Search" name="cuisine">
+            <button type="submit" class="btn btn-primary savebutton" id="main" name="main">New dish</button>
+            <button type="submit" class="btn btn-primary savebutton" id="desert" name="desert">New desert</button>
+            <button type="submit" class="btn btn-primary savebutton" id="suprise" name="suprise">Suprise me!</button>
+        </div>
+    </form>
+</div>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+  </svg>
+<div class="alert alert-success d-flex align-items-center row mb-3 alert1" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+    <div>
+      Your recipe has been saved to your favorites page!
+    </div>
+  </div>
+
+{% endblock %}

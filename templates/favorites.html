@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div style="text-align: center">
+    <p class="paragraph1 display-6"> 
+        {{user}}'s Favorites
+    </p>
+    
+    {% for item in favorites %}
+    <div class= "newrecipe2 w-50 p-3 position-relative start-50 translate-middle-x "> 
+        <div class = "title fw-bold">
+            {{item[2]}}
+        </div>
+        <img src="{{item[1]}}" class="img-thumbnail" alt="...">
+        <div class="fs-4">
+            <a href="{{item[3]}}" target="_blank">Prep / Instructions</a>
+        </div>
+        <p>
+            Date added: {{item[4]}}
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

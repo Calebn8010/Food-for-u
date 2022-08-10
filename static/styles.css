@@ -1,0 +1,77 @@
+body {
+  background-color: #9dff76;
+}
+
+.body2 {
+  background-color: #a5e96d;
+}
+
+.paragraph1 {
+    /*background-color: #ffffff;*/
+    color: #212529;
+    /*font-size: 3rem;
+    font-weight: 400;
+    line-height: 1.5;*/
+    margin: 2rem;
+    text-align: center;
+    padding: 1rem 1rem;
+}
+
+.alert1 {
+  margin: 5rem;
+  text-align: center;
+  padding: 2rem 2rem;
+}
+
+.newrecipe {
+  margin: 1rem;
+  text-align: center;
+  padding: 1rem 1rem;
+}
+
+.newrecipe2 {
+  margin-bottom: 1rem;
+  padding: 1rem 1rem;
+  background-color: #98e1fd;
+}
+
+.cstbutton {
+  margin-left: 4rem;
+}
+
+.homebuttons {
+  margin-top: 4.5rem;
+  
+}
+
+.homebuttons2 {
+  margin-top: 4.5rem;
+  margin-right: 2rem;
+}
+
+.savebutton {
+  margin-top: 1rem;
+}
+
+.link1 {
+  margin-top: 5rem;
+}
+
+.title {
+  margin-bottom: 1rem;
+}
+
+.accordion1 {
+  margin: 1rem;
+  text-align: center;
+  
+}
+
+.accordion2 {
+  margin-left: 10.5rem;
+}
+
+.profile {
+  margin-right: 2rem;
+}
+  

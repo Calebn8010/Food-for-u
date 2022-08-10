@@ -1,0 +1,241 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div>
+    <p class="paragraph1 display-6"> 
+        {{user}}'s Food Profile Settings
+    </p>
+    <form action ="/profile" method ="post">
+        <div action ="/profile" method ="post" class="container" >
+            <div class="accordion profile">
+                <div class="row align-items-start">
+                  <div class="col position-relative start-50 translate-middle-x container-sm">
+                    <div class="title">
+                        Allergies
+                    </div>
+                        <div>
+                        <div class="form-check">
+                            {% if allergies[0]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="dairy" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="dairy" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck1">
+                                Dairy
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[1]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="peanut" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="peanut" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Peanut
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[2]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="gluten" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="gluten" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck3">
+                                Gluten
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[3]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="egg" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="egg" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck5">
+                                Egg
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[4]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="seafood" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="seafood" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Seafood
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[5]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="grains" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="grains" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Grains
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[6]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="shellfish" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="shellfish" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Shellfish
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[7]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="sesame" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="sesame" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Sesame
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[8]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="treenut" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="treenut" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Tree Nutt
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[9]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="soy" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="soy" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Soy
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[10]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="wheat" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="wheat" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Wheat
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            {% if allergies[11]["checked"] %}
+                            <input class="form-check-input" type="checkbox" name="corn" value="" id="defaultCheck1" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="corn" value="" id="defaultCheck1">
+                            {% endif %}
+                            <label class="form-check-label" for="defaultCheck2">
+                                Corn
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col position-relative start-50 translate-middle-x homebuttons2">
+                        <div class="title">
+                            Diet
+                        </div>
+                        <div>
+                    <div class="form-check">
+                        {% if diet == "ketogenic" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault1" value="ketogenic" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault1" value="ketogenic">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Keto
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "glutenfree" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="glutenfree" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="glutenfree">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Gluten-free
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "vegetarian" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegetarian" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegetarian">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Vegetarian
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "vegan" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegan" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegan">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Vegan
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "paleo" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="paleo" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="paleo">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Paleo
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "primal" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="primal" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="primal">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Primal
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        {% if diet == "whole30" %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="whole30" checked>
+                        {% else %}
+                            <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="whole30">
+                        {% endif %}
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Whole30
+                        </label>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div style="text-align: center">
+            <button type="submit"  name="save" id="save1" class="btn btn-primary savebutton">Save</button>
+            <button type="submit"  name="clear" id="clear1" class="btn btn-primary savebutton">Clear Diet</button>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </symbol>
+          </svg>
+        <div class="alert alert-success d-flex align-items-center row mb-3 alert1" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <div>
+              Your profile settings have been saved successfully!
+            </div>
+          </div>
+          <button type="submit" name="newrecipe" id="newrecipe1" class="btn btn-light position-absolute start-50 translate-middle-x">New Recipe</button>
+    </form>
+</div>
+
+
+{% endblock %}

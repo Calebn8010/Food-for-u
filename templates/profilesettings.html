@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div>
+    <p class="paragraph1 display-6"> 
+        {{user}}'s Food Profile Settings
+    </p>
+    <form action ="/profile" method ="post">
+        <div action ="/profile" method ="post" class="container" >
+            <div class="accordion profile">
+                <div class="row align-items-start">
+                  <div class="col position-relative start-50 translate-middle-x container-sm">
+                    <div class="title">
+                        Allergies
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="dairy" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            Dairy
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="peanut" value="" id="defaultCheck2">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Peanut
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="gluten" value="" id="defaultCheck3">
+                        <label class="form-check-label" for="defaultCheck3">
+                            Gluten
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="egg" value="" id="defaultCheck4">
+                        <label class="form-check-label" for="defaultCheck5">
+                            Egg
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="seafood" value="" id="defaultCheck2">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Seafood
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="grains" value="" id="defaultCheck2">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Grains
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="shellfish" value="" id="defaultCheck2">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Shellfish
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="sesame" value="" id="defaultCheck2">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Sesame
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="treenut" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Tree Nutt
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="soy" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Soy
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="wheat" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Wheat
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="corn" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck2">
+                            Corn
+                        </label>
+                    </div>
+                  </div>
+                 
+                  <div class="col position-relative start-50 translate-middle-x homebuttons2">
+                    <div class="title">
+                      Diet
+                  </div>
+                  <div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault1" value="ketogenic">
+                          <label class="form-check-label" for="flexRadioDefault1">
+                            Keto
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="glutenfree">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Gluten-free
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegetarian">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Vegetarian
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="vegan">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Vegan
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="paleo">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Paleo
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="primal">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Primal
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="diet" id="flexRadioDefault2" value="whole30">
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Whole30
+                          </label>
+                      </div>
+                  </div>
+              </div>
+                </div>
+              </div>
+          </div>
+            
+            <button type="submit" class="btn btn-primary position-absolute start-50 translate-middle-x">Save</button>
+            
+        </div>
+    
+    </form>
+</div>
+
+
+{% endblock %}
