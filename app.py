@@ -772,7 +772,7 @@ def getrecipe():
     
     return render_template("getrecipe.html")
 
-@app.route("/favorites", methods=["POST", "GET"])
+@app.route("/favorites", methods=["GET"])
 @login_required
 def favorites():
     # for get request, connect to db and get list of favorites for current user 
@@ -783,7 +783,7 @@ def favorites():
                                   host=os.environ.get('dbhost'),
                                   port=os.environ.get('dbport'),
                                   database=os.environ.get('dbdatabase'))
-
+                
                 # check if current user is in favorites table - if they are then get list of favorites - if not then return favoritesnone.html
                 # Create a cursor to perform database operations
                 cursor = connection.cursor()
