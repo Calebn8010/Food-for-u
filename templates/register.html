@@ -1,12 +1,6 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<nav class="navbar bg-light fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-semibold" href="#">Food for You</a>
-    </div>
-</nav>
-
 <form action ="/register" method ="post" class="position-absolute top-50 start-50 translate-middle needs-validation" novalidate oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
     <div class="row mb-3">
       <div class="form-outline">
