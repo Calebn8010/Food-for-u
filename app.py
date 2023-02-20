@@ -201,9 +201,7 @@ def profile():
             print(counter)
             # get user selection from check box form
             if request.form.get(list(item.keys())[0]) == "":
-                print(item)
                 allergies[counter][list(item.keys())[0]] = True
-                print(item)
             counter += 1
 
             # bug that goes out of range
@@ -231,14 +229,12 @@ def profile():
                 print(usernames)
 
                 if (session["name"],) in usernames:
-                    print("i'm in")
                     # Update allergies 
                     cursor.execute("""UPDATE profile SET diet = %s, dairy = %s, peanut = %s, gluten = %s, egg = %s, seafood = %s, grains = %s, shellfish = %s, sesame = %s, soy = %s, wheat = %s, corn = %s, tree_nut = %s WHERE username = %s;""", (diet, allergies[0]["dairy"], allergies[1]["peanut"], allergies[2]["gluten"], allergies[3]["egg"], allergies[4]["seafood"], allergies[5]["grains"], allergies[6]["shellfish"], allergies[7]["sesame"], allergies[9]["soy"], allergies[10]["wheat"], allergies[11]["corn"], allergies[8]["treenut"], session["name"]))
                     connection.commit()
                 
                 else:
                     # Insert allergies 
-                    print("i'm not")
                     print(session["name"])
                     cursor.execute("""INSERT INTO profile (username, diet, dairy, peanut, gluten, egg, seafood, grains, shellfish, sesame, soy, wheat, corn, tree_nut) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (session["name"], diet, allergies[0]["dairy"], allergies[1]["peanut"], allergies[2]["gluten"], allergies[3]["egg"], allergies[4]["seafood"], allergies[5]["grains"], allergies[6]["shellfish"], allergies[7]["sesame"], allergies[9]["soy"], allergies[10]["wheat"], allergies[11]["corn"], allergies[8]["treenut"],))
                     connection.commit()
@@ -296,10 +292,8 @@ def profile():
                     allergiesdict = [{"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}]
                     diet = None
                     counter = 0
-                    print(allergies[0])
                     for item in allergies[0]:
                         # get only allergies from list of alergies db table
-                        #print(diet)
                         if item == True or item == False:
                             #allergieslist.append(item)
                             # add true or false for each allergy in dictionary                          
@@ -342,10 +336,6 @@ def getrecipe():
     # insert food query type and intolerances into url api call 
     # take api response and get all food IDs
     
-    
-    print(os.environ.get("API_KEY1"))
-    print(os.environ.get('API_KEY2'))
-    print(os.environ.get('API_KEY3'))
     if request.method == "POST":
         # if user selects favorites button from api error page
         if request.form.getlist("favorites") != None and request.form.getlist("favorites") != []:
@@ -665,8 +655,6 @@ def getrecipe():
                 try:
 
                     # try third api key / account
-                    print("using new key num3!")
-                    print(os.environ.get('API_KEY3'))
                     apikey = os.environ.get('API_KEY3')
                     # get cuisine input from user
                     cuisine = request.form.get("cuisine")
@@ -690,18 +678,7 @@ def getrecipe():
                     else:
                         return render_template("getrecipesaved.html")
 
-                    print(request.form.getlist("main"))
-                    print(request.form.getlist("desert"))
-                    print(request.form.getlist("suprise"))
-                    print(url1)
-                    
-
-                    
-                    print(type(cuisine))
-                    
-                    # get list of cuisine excluding recipes that contain users intolerances - old
-                    #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
-                    print(url1)
+                    # get list of cuisine excluding recipes that contain users intolerances 
                     response = requests.get(url1)
                     # get list of dictionaries from api using json function
                     recipes = response.json()
@@ -714,15 +691,12 @@ def getrecipe():
                     randomrecipe = random.choice(recipes)
                     # get recipe id from random recipe
                     newrecipeid = randomrecipe["id"]
-                    print(newrecipeid)
-                    print("test2")
                     # get image from random recipe
                     newrecipeimg = randomrecipe["image"]
-                    print(newrecipeimg)
+                    
                     # get title of recipe
                     newrecipetitle = randomrecipe["title"]
-                    print(newrecipetitle)
-
+                   
                     # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
                     url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
                     print(url2)
