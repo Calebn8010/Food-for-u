@@ -158,7 +158,8 @@ def login():
                 if not check_password_hash(passwordhash[0][0], passinput):
                     return render_template("loginpassnotfound.html")
                 # if username and password match db log user in
-                return redirect("/profile")
+                #return redirect("/profile")
+                return redirect("/getrecipe")
         except (Exception, Error) as error:
                 print("Error while connecting to PostgreSQL", error)
 
