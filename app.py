@@ -1,12 +1,12 @@
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session # type: ignore
 from flask_session import Session
 from functools import wraps
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash # type: ignore
 
 # used to connect to Heroku databse
 import os
-import psycopg2
-from psycopg2 import Error
+import psycopg2 # type: ignore
+from psycopg2 import Error # type: ignore
 
 # import requests for api calls
 import requests
@@ -18,13 +18,12 @@ from datetime import date
 # import for first letter caps function
 import string
 # import gotenv library for environment variables
-from dotenv import load_dotenv
-
-def configure():
-    load_dotenv()
+from dotenv import load_dotenv # type: ignore
 
 app = Flask(__name__)
 
+# load env variables for db connection
+load_dotenv()
 # configure session to have a length of time for timeout after being signed in / setup filesystem for session files
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -78,7 +77,7 @@ def register():
         # check if password and verify password entries match 
         if request.form.get("password") == request.form.get("password2"):
             try:
-                # Connect to heroku hosted database
+                # Connect to hosted database \ any db in .env config - previously hosted on Heroku
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -100,7 +99,7 @@ def register():
                 # if user does not already exist in db - add new user into table 
                 username = request.form.get("username")
                 passwordhash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
-                cursor.execute("""INSERT INTO users (username, passwordhash, cash) VALUES (%s, %s, 10000);""", (username, passwordhash))
+                cursor.execute("""INSERT INTO users (username, passwordhash) VALUES (%s, %s);""", (username, passwordhash))
                 connection.commit()
             
                 
@@ -135,7 +134,7 @@ def login():
 
         # check if username / password submitted is users table 
         try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -203,9 +202,7 @@ def profile():
             print(counter)
             # get user selection from check box form
             if request.form.get(list(item.keys())[0]) == "":
-                print(item)
                 allergies[counter][list(item.keys())[0]] = True
-                print(item)
             counter += 1
 
             # bug that goes out of range
@@ -217,7 +214,7 @@ def profile():
             diet = None
 
         try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -233,14 +230,12 @@ def profile():
                 print(usernames)
 
                 if (session["name"],) in usernames:
-                    print("i'm in")
                     # Update allergies 
                     cursor.execute("""UPDATE profile SET diet = %s, dairy = %s, peanut = %s, gluten = %s, egg = %s, seafood = %s, grains = %s, shellfish = %s, sesame = %s, soy = %s, wheat = %s, corn = %s, tree_nut = %s WHERE username = %s;""", (diet, allergies[0]["dairy"], allergies[1]["peanut"], allergies[2]["gluten"], allergies[3]["egg"], allergies[4]["seafood"], allergies[5]["grains"], allergies[6]["shellfish"], allergies[7]["sesame"], allergies[9]["soy"], allergies[10]["wheat"], allergies[11]["corn"], allergies[8]["treenut"], session["name"]))
                     connection.commit()
                 
                 else:
                     # Insert allergies 
-                    print("i'm not")
                     print(session["name"])
                     cursor.execute("""INSERT INTO profile (username, diet, dairy, peanut, gluten, egg, seafood, grains, shellfish, sesame, soy, wheat, corn, tree_nut) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (session["name"], diet, allergies[0]["dairy"], allergies[1]["peanut"], allergies[2]["gluten"], allergies[3]["egg"], allergies[4]["seafood"], allergies[5]["grains"], allergies[6]["shellfish"], allergies[7]["sesame"], allergies[9]["soy"], allergies[10]["wheat"], allergies[11]["corn"], allergies[8]["treenut"],))
                     connection.commit()
@@ -267,10 +262,12 @@ def profile():
         #return render_template("profilesettings.html", user=session["name"])
 
     # For Get request:
+    print()
+
     # check if user already has allergies selected - if so then render template profilesettingsfilled
     #return render_template("profilesettingsfilled.html")
     try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -290,22 +287,43 @@ def profile():
                     # get current allergies for user to fill in check boxs for html page
                     cursor.execute("""SELECT * FROM profile WHERE username = %s;""", (session["name"],))
                     allergies = cursor.fetchall()
+                    #allergies = list(cursor.fetchall()[0])
+                
                     
                     # get only allergies from list of alergies db table and add true or false for each allergy in dictionary
                     # previous code for jinja html forloop 
                     # allergiesdict = [{"allergy":"Dairy","checked":False}, {"allergy":"Peanut","checked":False}, {"allergy":"Gluten","checked":False}, {"allergy":"Egg","checked":False}, {"allergy":"Seafood","checked":False}, {"allergy":"Grains","checked":False}, {"allergy":"Shellfish","checked":False}, {"allergy":"Sesame","checked":False}, {"allergy":"Soy","checked":False}, {"allergy":"Wheat","checked":False}, {"allergy":"Corn","checked":False}, {"allergy":"Tree Nut","checked":False}]
                     # allergieslist = []
+                    print("291")
+                    print(allergies)
+                    # mod db list for only checkbox items
+                    #allergies.pop(0)
+                    #allergies.pop()
+                    #allergies = tuple(allergies)
+                    
+                    print(allergies)
+                    print(type(allergies[0][0]))
+                    print(type(allergies[0][1]))
+                    print(type(allergies[0][2]))
+                    print(type(allergies[0][3]))
                     allergiesdict = [{"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}]
                     diet = None
                     counter = 0
-                    print(allergies[0])
                     for item in allergies[0]:
+                        print(item)
+                        print(type(item))
+                        if type(item) == int:
+                            continue
                         # get only allergies from list of alergies db table
-                        #print(diet)
-                        if item == True or item == False:
+                        if item == "true":
                             #allergieslist.append(item)
                             # add true or false for each allergy in dictionary                          
-                            allergiesdict[counter]["checked"] = item
+                            allergiesdict[counter]["checked"] = True
+                            counter += 1
+                        if item == "false":
+                            #allergieslist.append(item)
+                            # add true or false for each allergy in dictionary                          
+                            allergiesdict[counter]["checked"] = False
                             counter += 1
                         # get diet if user has one selected currently
                         if item != None and counter == 0:
@@ -344,10 +362,6 @@ def getrecipe():
     # insert food query type and intolerances into url api call 
     # take api response and get all food IDs
     
-    
-    print(os.environ.get("API_KEY1"))
-    print(os.environ.get('API_KEY2'))
-    print(os.environ.get('API_KEY3'))
     if request.method == "POST":
         # if user selects favorites button from api error page
         if request.form.getlist("favorites") != None and request.form.getlist("favorites") != []:
@@ -360,7 +374,7 @@ def getrecipe():
 
             # connect to db and insert current recipe information 
             try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -385,7 +399,7 @@ def getrecipe():
 
         # get current users intolerances from db
         try:
-                    # Connect to heroku hosted database
+                    # Connect to heroku hosted database \ any db in .env config
                     connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                     password=os.environ.get('dbpassword'),
                                     host=os.environ.get('dbhost'),
@@ -667,8 +681,6 @@ def getrecipe():
                 try:
 
                     # try third api key / account
-                    print("using new key num3!")
-                    print(os.environ.get('API_KEY3'))
                     apikey = os.environ.get('API_KEY3')
                     # get cuisine input from user
                     cuisine = request.form.get("cuisine")
@@ -692,18 +704,7 @@ def getrecipe():
                     else:
                         return render_template("getrecipesaved.html")
 
-                    print(request.form.getlist("main"))
-                    print(request.form.getlist("desert"))
-                    print(request.form.getlist("suprise"))
-                    print(url1)
-                    
-
-                    
-                    print(type(cuisine))
-                    
-                    # get list of cuisine excluding recipes that contain users intolerances - old
-                    #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
-                    print(url1)
+                    # get list of cuisine excluding recipes that contain users intolerances 
                     response = requests.get(url1)
                     # get list of dictionaries from api using json function
                     recipes = response.json()
@@ -716,15 +717,12 @@ def getrecipe():
                     randomrecipe = random.choice(recipes)
                     # get recipe id from random recipe
                     newrecipeid = randomrecipe["id"]
-                    print(newrecipeid)
-                    print("test2")
                     # get image from random recipe
                     newrecipeimg = randomrecipe["image"]
-                    print(newrecipeimg)
+                    
                     # get title of recipe
                     newrecipetitle = randomrecipe["title"]
-                    print(newrecipetitle)
-
+                   
                     # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
                     url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
                     print(url2)
@@ -779,7 +777,7 @@ def getrecipe():
 def favorites():
     # for get request, connect to db and get list of favorites for current user 
     try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
