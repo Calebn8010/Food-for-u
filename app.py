@@ -267,7 +267,7 @@ def profile():
     # check if user already has allergies selected - if so then render template profilesettingsfilled
     #return render_template("profilesettingsfilled.html")
     try:
-                # Connect to heroku hosted database \ any db in .env config
+                # Connect to heroku hosted database \ any postgresql db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
