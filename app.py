@@ -354,6 +354,7 @@ def profile():
     # render default profilesettings without any selected
     return render_template("profilesettings.html", user=session["name"])   
 
+
 @app.route("/getrecipe", methods=["POST", "GET"])
 @login_required
 def getrecipe():
@@ -471,7 +472,7 @@ def getrecipe():
         # try using api else try second api key
         try:
             # first api key / account
-            apikey = os.environ.get('API_KEY1')
+            apikey = os.environ.get('api_key1')
             # get cuisine input from user
             cuisine = request.form.get("cuisine")
             cuisinelist = ["","African", "American","British","Cajun","Caribbean","Chinese","Eastern European","European","French","German","Greek","Indian","Irish","Italian","Japanese","Jewish","Korean","Latin American","Mediterranean","Mexican","Middle Eastern","NordicSouthern","Spanish","Thai","Vietnamese"]
@@ -576,7 +577,7 @@ def getrecipe():
 
                 # try second api key / account
                 print("using new key!")
-                apikey = os.environ.get('API_KEY2')
+                apikey = os.environ.get('api_key2')
                 # get cuisine input from user
                 cuisine = request.form.get("cuisine")
                 cuisinelist = []
@@ -681,7 +682,7 @@ def getrecipe():
                 try:
 
                     # try third api key / account
-                    apikey = os.environ.get('API_KEY3')
+                    apikey = os.environ.get('api_key3')
                     # get cuisine input from user
                     cuisine = request.form.get("cuisine")
                     cuisinelist = []
@@ -771,6 +772,7 @@ def getrecipe():
     # Get request    
     
     return render_template("getrecipe.html")
+
 
 @app.route("/favorites", methods=["GET"])
 @login_required
