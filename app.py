@@ -58,6 +58,8 @@ def register():
     session.clear()
     # if user sends input to form add new user to database
     if request.method == "POST":
+        if request.form.getlist("newlogin") != None and request.form.getlist("newlogin") != []:
+            return redirect("/login")
         if not request.form.get("username"):
             return render_template("register.html")
         if not request.form.get("password"):
@@ -110,7 +112,7 @@ def register():
                     cursor.close()
                     connection.close()
                     print("PostgreSQL connection is closed")
-        return redirect("/")
+            return render_template("registerloggedin.html")
     
     return render_template("register.html")
 
