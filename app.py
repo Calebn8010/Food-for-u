@@ -72,13 +72,6 @@ def register():
         if "'" in (request.form.get("password2")) or ";" in (request.form.get("password2")):
             return render_template("registerinvalid.html")
 
-        # test
-        print(os.environ)
-        print(os.environ.get('dbuser'))
-        print(os.environ.get('dbpassword'))
-        print(os.environ.get('dbhost'))
-        print(os.environ.get('dbport'))
-        print(os.environ.get('dbdatabase'))
         # check if password and verify password entries match 
         if request.form.get("password") == request.form.get("password2"):
             try:
@@ -267,6 +260,8 @@ def profile():
         #return render_template("profilesettings.html", user=session["name"])
 
     # For Get request:
+    print()
+
     # check if user already has allergies selected - if so then render template profilesettingsfilled
     #return render_template("profilesettingsfilled.html")
     try:
@@ -290,20 +285,43 @@ def profile():
                     # get current allergies for user to fill in check boxs for html page
                     cursor.execute("""SELECT * FROM profile WHERE username = %s;""", (session["name"],))
                     allergies = cursor.fetchall()
+                    #allergies = list(cursor.fetchall()[0])
+                
                     
                     # get only allergies from list of alergies db table and add true or false for each allergy in dictionary
                     # previous code for jinja html forloop 
                     # allergiesdict = [{"allergy":"Dairy","checked":False}, {"allergy":"Peanut","checked":False}, {"allergy":"Gluten","checked":False}, {"allergy":"Egg","checked":False}, {"allergy":"Seafood","checked":False}, {"allergy":"Grains","checked":False}, {"allergy":"Shellfish","checked":False}, {"allergy":"Sesame","checked":False}, {"allergy":"Soy","checked":False}, {"allergy":"Wheat","checked":False}, {"allergy":"Corn","checked":False}, {"allergy":"Tree Nut","checked":False}]
                     # allergieslist = []
+                    print("291")
+                    print(allergies)
+                    # mod db list for only checkbox items
+                    #allergies.pop(0)
+                    #allergies.pop()
+                    #allergies = tuple(allergies)
+                    
+                    print(allergies)
+                    print(type(allergies[0][0]))
+                    print(type(allergies[0][1]))
+                    print(type(allergies[0][2]))
+                    print(type(allergies[0][3]))
                     allergiesdict = [{"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}]
                     diet = None
                     counter = 0
                     for item in allergies[0]:
+                        print(item)
+                        print(type(item))
+                        if type(item) == int:
+                            continue
                         # get only allergies from list of alergies db table
-                        if item == True or item == False:
+                        if item == "true":
                             #allergieslist.append(item)
                             # add true or false for each allergy in dictionary                          
-                            allergiesdict[counter]["checked"] = item
+                            allergiesdict[counter]["checked"] = True
+                            counter += 1
+                        if item == "false":
+                            #allergieslist.append(item)
+                            # add true or false for each allergy in dictionary                          
+                            allergiesdict[counter]["checked"] = False
                             counter += 1
                         # get diet if user has one selected currently
                         if item != None and counter == 0:
