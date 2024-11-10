@@ -1,12 +1,12 @@
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session # type: ignore
 from flask_session import Session
 from functools import wraps
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash # type: ignore
 
 # used to connect to Heroku databse
 import os
-import psycopg2
-from psycopg2 import Error
+import psycopg2 # type: ignore
+from psycopg2 import Error # type: ignore
 
 # import requests for api calls
 import requests
@@ -18,13 +18,12 @@ from datetime import date
 # import for first letter caps function
 import string
 # import gotenv library for environment variables
-from dotenv import load_dotenv
-
-def configure():
-    load_dotenv()
+from dotenv import load_dotenv # type: ignore
 
 app = Flask(__name__)
 
+# load env variables for db connection
+load_dotenv()
 # configure session to have a length of time for timeout after being signed in / setup filesystem for session files
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -73,10 +72,17 @@ def register():
         if "'" in (request.form.get("password2")) or ";" in (request.form.get("password2")):
             return render_template("registerinvalid.html")
 
+        # test
+        print(os.environ)
+        print(os.environ.get('dbuser'))
+        print(os.environ.get('dbpassword'))
+        print(os.environ.get('dbhost'))
+        print(os.environ.get('dbport'))
+        print(os.environ.get('dbdatabase'))
         # check if password and verify password entries match 
         if request.form.get("password") == request.form.get("password2"):
             try:
-                # Connect to heroku hosted database
+                # Connect to hosted database \ any db in .env config - previously hosted on Heroku
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -98,7 +104,7 @@ def register():
                 # if user does not already exist in db - add new user into table 
                 username = request.form.get("username")
                 passwordhash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
-                cursor.execute("""INSERT INTO users (username, passwordhash, cash) VALUES (%s, %s, 10000);""", (username, passwordhash))
+                cursor.execute("""INSERT INTO users (username, passwordhash) VALUES (%s, %s);""", (username, passwordhash))
                 connection.commit()
             
                 
@@ -133,7 +139,7 @@ def login():
 
         # check if username / password submitted is users table 
         try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -213,7 +219,7 @@ def profile():
             diet = None
 
         try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -264,7 +270,7 @@ def profile():
     # check if user already has allergies selected - if so then render template profilesettingsfilled
     #return render_template("profilesettingsfilled.html")
     try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -348,7 +354,7 @@ def getrecipe():
 
             # connect to db and insert current recipe information 
             try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
@@ -373,7 +379,7 @@ def getrecipe():
 
         # get current users intolerances from db
         try:
-                    # Connect to heroku hosted database
+                    # Connect to heroku hosted database \ any db in .env config
                     connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                     password=os.environ.get('dbpassword'),
                                     host=os.environ.get('dbhost'),
@@ -751,7 +757,7 @@ def getrecipe():
 def favorites():
     # for get request, connect to db and get list of favorites for current user 
     try:
-                # Connect to heroku hosted database
+                # Connect to heroku hosted database \ any db in .env config
                 connection = psycopg2.connect(user=os.environ.get('dbuser'),
                                   password=os.environ.get('dbpassword'),
                                   host=os.environ.get('dbhost'),
