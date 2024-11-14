@@ -427,313 +427,23 @@ def getrecipe():
                 if diet:
                     print("true")
                 print(newstring)
-
-
                 #return render_template("profilesettingsfilledup.html", allergies=allergiesdict, user=session["name"])
-
                 # if user is not in profile db table - set to default
             else:
                 newstring = ""
                 diet = None
             
-            # try using api else try second api key
+            # try using first api else try second api key
             try:
-                # first api key / account
-                apikey = os.environ.get('api_key1')
-                # get cuisine input from user
-                cuisine = request.form.get("cuisine")
-                cuisinelist = ["","African", "American","British","Cajun","Caribbean","Chinese","Eastern European","European","French","German","Greek","Indian","Irish","Italian","Japanese","Jewish","Korean","Latin American","Mediterranean","Mexican","Middle Eastern","NordicSouthern","Spanish","Thai","Vietnamese"]
-                # if cuisine entered from user is not supported render invalid template
-                if string.capwords(cuisine) not in cuisinelist:
-                    return render_template("getrecipecuisinenotvalid.html")
-                
-                print(newstring)
-                print(diet)
-                # if user selects new main dish button change api url
-                if request.form.getlist("main") != None and request.form.getlist("main") != []:
-                    url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=main course&diet=%s" % (apikey, cuisine, newstring, diet)
-                # if user selects new main dish button change api url
-                elif request.form.getlist("desert") != None and request.form.getlist("desert") != []:
-                    url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=dessert&diet=%s" % (apikey, cuisine, newstring, diet)
-                # if user selects new main dish button change api url
-                elif request.form.getlist("suprise") != None and request.form.getlist("suprise") != []:
-                    url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&diet=%s" % (apikey, cuisine, newstring, diet)
-                # if none return getrecipe.html
-                else:
-                    return render_template("getrecipesaved.html")
-
-                print(request.form.getlist("main"))
-                print(request.form.getlist("desert"))
-                print(request.form.getlist("suprise"))
-                print(url1)
-                
-
-                
-                print(type(cuisine))
-                
-                # get list of cuisine excluding recipes that contain users intolerances - old
-                #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
-                print(url1)
-                response = requests.get(url1)
-                # get list of dictionaries from api using json function
-                recipes = response.json()
-                # get only results dictionary 
-                recipes = recipes["results"]
-                # get random recipe from list of recipes
-                # if results is empty return no recipes found within profile settings
-                if recipes == []:
-                    return render_template("getrecipenotfound.html")
-                randomrecipe = random.choice(recipes)
-                # get recipe id from random recipe
-                newrecipeid = randomrecipe["id"]
-                print(newrecipeid)
-                print("test2")
-                # get image from random recipe
-                newrecipeimg = randomrecipe["image"]
-                print(newrecipeimg)
-                # get title of recipe
-                newrecipetitle = randomrecipe["title"]
-                print(newrecipetitle)
-
-                # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
-                url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
-                print(url2)
-                response2 = requests.get(url2)
-                source = (response2.json())["sourceUrl"]
-                print(source)
-                #img = (response2.json())[""]
-                # get recipe nutritional information 
-                url3 = "https://api.spoonacular.com/recipes/%s//nutritionWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                response3 = requests.get(url3)
-                nutrition = response3.json()
-                nutritionlist = [nutrition["calories"], nutrition["carbs"], nutrition["fat"], nutrition["protein"]]
-                print(nutritionlist)
-
-                # get recipe ingredients for id selected  https://api.spoonacular.com/recipes/1003464/ingredientWidget.json?
-                url4 = "https://api.spoonacular.com/recipes/%s/ingredientWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                response4 = requests.get(url4)
-                ingredients = response4.json()
-                # get ingredients dictionary from api call
-                ingredients = ingredients["ingredients"]
-                ingredientslist = []
-                # get all names of ingredients from list of dictionarys
-                for item in ingredients:
-                    # get current ingredient, convert to first letter capital then insert into list of ingredients
-                    ingredientslist.append((item["name"]).capitalize())
-                    
-                print(ingredientslist)
-                print(url4)
-                # set current session recipe 
-                session["recipe"] = newrecipeid
-                # set current session recipe image
-                session["image"] = newrecipeimg
-                # set current session recipe title
-                session["title"] = newrecipetitle
-                # set current session recipe link
-                session["link"] = source
-                # set current date when saved
-                todays_date = date.today()
-                # re-order string for day month year
-                todays_date = str(todays_date.day) + '-' + str(todays_date.month) + '-' + str(todays_date.year)
-                session["date"] = (todays_date)
-
-                return render_template("getrecipefilled.html", image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
-
+                return api_request(os.environ.get('api_key1'), newstring, diet)
             except:
+                # try using second api else try second third key
                 try:
-
-                    # try second api key / account
-                    print("using new key!")
-                    apikey = os.environ.get('api_key2')
-                    # get cuisine input from user
-                    cuisine = request.form.get("cuisine")
-                    cuisinelist = []
-                    if cuisine == "":
-                        print("test")
-                        cuisinelist.append(cuisine)
-                    print(newstring)
-                    print(diet)
-
-                    # if user selects new main dish button change api url
-                    if request.form.getlist("main") != None and request.form.getlist("main") != []:
-                        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=main course&diet=%s" % (apikey, cuisine, newstring, diet)
-                    # if user selects new main dish button change api url
-                    elif request.form.getlist("desert") != None and request.form.getlist("desert") != []:
-                        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=dessert&diet=%s" % (apikey, cuisine, newstring, diet)
-                    # if user selects new main dish button change api url
-                    elif request.form.getlist("suprise") != None and request.form.getlist("suprise") != []:
-                        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&diet=%s" % (apikey, cuisine, newstring, diet)
-                    # if none return getrecipe.html
-                    else:
-                        return render_template("getrecipesaved.html")
-
-                    print(request.form.getlist("main"))
-                    print(request.form.getlist("desert"))
-                    print(request.form.getlist("suprise"))
-                    print(url1)
-                    
-
-                    
-                    print(type(cuisine))
-                    
-                    # get list of cuisine excluding recipes that contain users intolerances - old
-                    #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
-                    print(url1)
-                    response = requests.get(url1)
-                    # get list of dictionaries from api using json function
-                    recipes = response.json()
-                    # get only results dictionary 
-                    recipes = recipes["results"]
-                    # get random recipe from list of recipes
-                    # if results is empty return no recipes found within profile settings
-                    if recipes == []:
-                        return render_template("getrecipenotfound.html")
-                    randomrecipe = random.choice(recipes)
-                    # get recipe id from random recipe
-                    newrecipeid = randomrecipe["id"]
-                    print(newrecipeid)
-                    print("test2")
-                    # get image from random recipe
-                    newrecipeimg = randomrecipe["image"]
-                    print(newrecipeimg)
-                    # get title of recipe
-                    newrecipetitle = randomrecipe["title"]
-                    print(newrecipetitle)
-
-                    # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
-                    url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
-                    print(url2)
-                    response2 = requests.get(url2)
-                    source = (response2.json())["sourceUrl"]
-                    print(source)
-                    #img = (response2.json())[""]
-                    # get recipe nutritional information 
-                    url3 = "https://api.spoonacular.com/recipes/%s//nutritionWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                    response3 = requests.get(url3)
-                    nutrition = response3.json()
-                    nutritionlist = [nutrition["calories"], nutrition["carbs"], nutrition["fat"], nutrition["protein"]]
-                    print(nutritionlist)
-
-                    # get recipe ingredients for id selected  https://api.spoonacular.com/recipes/1003464/ingredientWidget.json?
-                    url4 = "https://api.spoonacular.com/recipes/%s/ingredientWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                    response4 = requests.get(url4)
-                    ingredients = response4.json()
-                    # get ingredients dictionary from api call
-                    ingredients = ingredients["ingredients"]
-                    ingredientslist = []
-                    # get all names of ingredients from list of dictionarys
-                    for item in ingredients:
-                        # get current ingredient, convert to first letter capital then insert into list of ingredients
-                        ingredientslist.append((item["name"]).capitalize())
-                        
-                    print(ingredientslist)
-                    print(url4)
-                    # set current session recipe 
-                    session["recipe"] = newrecipeid
-                    # set current session recipe image
-                    session["image"] = newrecipeimg
-                    # set current session recipe title
-                    session["title"] = newrecipetitle
-                    # set current session recipe link
-                    session["link"] = source
-                    # set current date when saved
-                    todays_date = date.today()
-                    # re-order string for day month year
-                    todays_date = str(todays_date.day) + '-' + str(todays_date.month) + '-' + str(todays_date.year)
-                    session["date"] = (todays_date)
-
-                    return render_template("getrecipefilled.html", image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
-                
-                
+                    return api_request(os.environ.get('api_key2'), newstring, diet)
                 except:
+                    # try using third api else return out of api keys page
                     try:
-
-                        # try third api key / account
-                        apikey = os.environ.get('api_key3')
-                        # get cuisine input from user
-                        cuisine = request.form.get("cuisine")
-                        cuisinelist = []
-                        if cuisine == "":
-                            print("test")
-                            cuisinelist.append(cuisine)
-                        print(newstring)
-                        print(diet)
-
-                        # if user selects new main dish button change api url
-                        if request.form.getlist("main") != None and request.form.getlist("main") != []:
-                            url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=main course&diet=%s" % (apikey, cuisine, newstring, diet)
-                        # if user selects new main dish button change api url
-                        elif request.form.getlist("desert") != None and request.form.getlist("desert") != []:
-                            url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=dessert&diet=%s" % (apikey, cuisine, newstring, diet)
-                        # if user selects new main dish button change api url
-                        elif request.form.getlist("suprise") != None and request.form.getlist("suprise") != []:
-                            url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&diet=%s" % (apikey, cuisine, newstring, diet)
-                        # if none return getrecipe.html
-                        else:
-                            return render_template("getrecipesaved.html")
-
-                        # get list of cuisine excluding recipes that contain users intolerances 
-                        response = requests.get(url1)
-                        # get list of dictionaries from api using json function
-                        recipes = response.json()
-                        # get only results dictionary 
-                        recipes = recipes["results"]
-                        # get random recipe from list of recipes
-                        # if results is empty return no recipes found within profile settings
-                        if recipes == []:
-                            return render_template("getrecipenotfound.html")
-                        randomrecipe = random.choice(recipes)
-                        # get recipe id from random recipe
-                        newrecipeid = randomrecipe["id"]
-                        # get image from random recipe
-                        newrecipeimg = randomrecipe["image"]
-                        
-                        # get title of recipe
-                        newrecipetitle = randomrecipe["title"]
-                    
-                        # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
-                        url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
-                        print(url2)
-                        response2 = requests.get(url2)
-                        source = (response2.json())["sourceUrl"]
-                        print(source)
-                        #img = (response2.json())[""]
-                        # get recipe nutritional information 
-                        url3 = "https://api.spoonacular.com/recipes/%s//nutritionWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                        response3 = requests.get(url3)
-                        nutrition = response3.json()
-                        nutritionlist = [nutrition["calories"], nutrition["carbs"], nutrition["fat"], nutrition["protein"]]
-                        print(nutritionlist)
-
-                        # get recipe ingredients for id selected  https://api.spoonacular.com/recipes/1003464/ingredientWidget.json?
-                        url4 = "https://api.spoonacular.com/recipes/%s/ingredientWidget.json?apiKey=%s" % (newrecipeid, apikey)
-                        response4 = requests.get(url4)
-                        ingredients = response4.json()
-                        # get ingredients dictionary from api call
-                        ingredients = ingredients["ingredients"]
-                        ingredientslist = []
-                        # get all names of ingredients from list of dictionarys
-                        for item in ingredients:
-                            # get current ingredient, convert to first letter capital then insert into list of ingredients
-                            ingredientslist.append((item["name"]).capitalize())
-                            
-                        print(ingredientslist)
-                        print(url4)
-                        # set current session recipe 
-                        session["recipe"] = newrecipeid
-                        # set current session recipe image
-                        session["image"] = newrecipeimg
-                        # set current session recipe title
-                        session["title"] = newrecipetitle
-                        # set current session recipe link
-                        session["link"] = source
-                        # set current date when saved
-                        todays_date = date.today()
-                        # re-order string for day month year
-                        todays_date = str(todays_date.day) + '-' + str(todays_date.month) + '-' + str(todays_date.year)
-                        session["date"] = (todays_date)
-
-                        return render_template("getrecipefilled.html", image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
+                        return api_request(os.environ.get('api_key3'), newstring, diet)
                     except:
                         return render_template("noapicallsleftonapikey.html")
                     
@@ -802,3 +512,105 @@ def connectdb():
                         port=os.environ.get('dbport'),
                         database=os.environ.get('dbdatabase'))
     return connection
+
+
+def api_request(apikey, newstring, diet):
+    print(apikey)
+    # get cuisine input from user
+    cuisine = request.form.get("cuisine")
+    cuisinelist = ["","African", "American","British","Cajun","Caribbean","Chinese","Eastern European","European","French","German","Greek","Indian","Irish","Italian","Japanese","Jewish","Korean","Latin American","Mediterranean","Mexican","Middle Eastern","NordicSouthern","Spanish","Thai","Vietnamese"]
+    # if cuisine entered from user is not supported render invalid template
+    if string.capwords(cuisine) not in cuisinelist:
+        return render_template("getrecipecuisinenotvalid.html")
+    
+    print(newstring)
+    print(diet)
+    # if user selects new main dish button change api url
+    if request.form.getlist("main") != None and request.form.getlist("main") != []:
+        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=main course&diet=%s" % (apikey, cuisine, newstring, diet)
+    # if user selects new main dish button change api url
+    elif request.form.getlist("desert") != None and request.form.getlist("desert") != []:
+        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=dessert&diet=%s" % (apikey, cuisine, newstring, diet)
+    # if user selects new main dish button change api url
+    elif request.form.getlist("suprise") != None and request.form.getlist("suprise") != []:
+        url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&diet=%s" % (apikey, cuisine, newstring, diet)
+    # if none return getrecipe.html
+    else:
+        return render_template("getrecipesaved.html")
+
+    print(request.form.getlist("main"))
+    print(request.form.getlist("desert"))
+    print(request.form.getlist("suprise"))
+    print(url1)
+    
+
+    
+    print(type(cuisine))
+    
+    # get list of cuisine excluding recipes that contain users intolerances - old
+    #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
+    print(url1)
+    response = requests.get(url1)
+    # get list of dictionaries from api using json function
+    recipes = response.json()
+    # get only results dictionary 
+    recipes = recipes["results"]
+    # get random recipe from list of recipes
+    # if results is empty return no recipes found within profile settings
+    if recipes == []:
+        return render_template("getrecipenotfound.html")
+    randomrecipe = random.choice(recipes)
+    # get recipe id from random recipe
+    newrecipeid = randomrecipe["id"]
+    print(newrecipeid)
+    print("test2")
+    # get image from random recipe
+    newrecipeimg = randomrecipe["image"]
+    print(newrecipeimg)
+    # get title of recipe
+    newrecipetitle = randomrecipe["title"]
+    print(newrecipetitle)
+
+    # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
+    url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
+    print(url2)
+    response2 = requests.get(url2)
+    source = (response2.json())["sourceUrl"]
+    print(source)
+    #img = (response2.json())[""]
+    # get recipe nutritional information 
+    url3 = "https://api.spoonacular.com/recipes/%s//nutritionWidget.json?apiKey=%s" % (newrecipeid, apikey)
+    response3 = requests.get(url3)
+    nutrition = response3.json()
+    nutritionlist = [nutrition["calories"], nutrition["carbs"], nutrition["fat"], nutrition["protein"]]
+    print(nutritionlist)
+
+    # get recipe ingredients for id selected  https://api.spoonacular.com/recipes/1003464/ingredientWidget.json?
+    url4 = "https://api.spoonacular.com/recipes/%s/ingredientWidget.json?apiKey=%s" % (newrecipeid, apikey)
+    response4 = requests.get(url4)
+    ingredients = response4.json()
+    # get ingredients dictionary from api call
+    ingredients = ingredients["ingredients"]
+    ingredientslist = []
+    # get all names of ingredients from list of dictionarys
+    for item in ingredients:
+        # get current ingredient, convert to first letter capital then insert into list of ingredients
+        ingredientslist.append((item["name"]).capitalize())
+        
+    print(ingredientslist)
+    print(url4)
+    # set current session recipe 
+    session["recipe"] = newrecipeid
+    # set current session recipe image
+    session["image"] = newrecipeimg
+    # set current session recipe title
+    session["title"] = newrecipetitle
+    # set current session recipe link
+    session["link"] = source
+    # set current date when saved
+    todays_date = date.today()
+    # re-order string for day month year
+    todays_date = str(todays_date.day) + '-' + str(todays_date.month) + '-' + str(todays_date.year)
+    session["date"] = (todays_date)
+
+    return render_template("getrecipefilled.html", image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
