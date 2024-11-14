@@ -78,12 +78,7 @@ def register():
         if request.form.get("password") == request.form.get("password2"):
             try:
                 # Connect to hosted database \ any db in .env config - previously hosted on Heroku
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
-
+                connection = connectdb()
                 # Create a cursor to perform database operations
                 cursor = connection.cursor()
                 # Get current username input from user
@@ -135,11 +130,7 @@ def login():
         # check if username / password submitted is users table 
         try:
                 # Connect to heroku hosted database \ any db in .env config
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
+                connection = connectdb()
 
                 # Create a cursor to perform database operations
                 cursor = connection.cursor()
@@ -216,11 +207,7 @@ def profile():
 
         try:
                 # Connect to heroku hosted database \ any db in .env config
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
+                connection = connectdb()
 
                 # check if current user is in allergie table - if not then insert into db - if they are then update db
                 # Create a cursor to perform database operations
@@ -269,11 +256,7 @@ def profile():
     #return render_template("profilesettingsfilled.html")
     try:
                 # Connect to heroku hosted database \ any postgresql db in .env config
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
+                connection = connectdb()
 
                 # check if current user is in allergie table - if they are then update db - if not then return default profilesettings.html
                 # Create a cursor to perform database operations
@@ -377,11 +360,7 @@ def getrecipe():
             # connect to db and insert current recipe information 
             try:
                 # Connect to heroku hosted database \ any db in .env config
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
+                connection = connectdb()
                 # Create a cursor to perform database operations
                 cursor = connection.cursor()
                 # insert new favorite recipe into favorites table
@@ -783,11 +762,7 @@ def favorites():
     # for get request, connect to db and get list of favorites for current user 
     try:
                 # Connect to heroku hosted database \ any db in .env config
-                connection = psycopg2.connect(user=os.environ.get('dbuser'),
-                                  password=os.environ.get('dbpassword'),
-                                  host=os.environ.get('dbhost'),
-                                  port=os.environ.get('dbport'),
-                                  database=os.environ.get('dbdatabase'))
+                connection = connectdb()
                 
                 # check if current user is in favorites table - if they are then get list of favorites - if not then return favoritesnone.html
                 # Create a cursor to perform database operations
@@ -816,3 +791,14 @@ def favorites():
     
     print(favorites)
     return render_template("favorites.html", favorites=favorites, user=session["name"])
+
+
+
+def connectdb():
+    # Connect to heroku hosted database \ any db in .env config
+    connection = psycopg2.connect(user=os.environ.get('dbuser'),
+                        password=os.environ.get('dbpassword'),
+                        host=os.environ.get('dbhost'),
+                        port=os.environ.get('dbport'),
+                        database=os.environ.get('dbdatabase'))
+    return connection
