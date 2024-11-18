@@ -32,7 +32,7 @@
 ####    `corn VARCHAR(50),`
 ####    `tree_nut VARCHAR(50),`
 ####    `created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP AT TIME ZONE 'America/New_York'`
-#### );`
+#### `);`
 
 ####
 #### `CREATE TABLE favorites (`
