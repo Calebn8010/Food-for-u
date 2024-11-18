@@ -20,7 +20,7 @@
 
     <nav class="navbar bg-light fixed-top position-relative">
         <div class="container-fluid">
-          <a class="navbar-brand fw-semibold" href="http://127.0.0.1:5000">Food for You</a> 
+          <a class="navbar-brand fw-semibold" href="{{homepage}}">Food for You</a> 
           {% if session["name"] %}
           <button class="navbar-toggler body2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
             <span class="navbar-toggler-icon"></span>
@@ -33,16 +33,16 @@
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
-                  <a class="nav-link" href="http://127.0.0.1:5000/profile">Food Profile</a>
+                  <a class="nav-link" href="{{homepage}}/profile">Food Profile</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="http://127.0.0.1:5000/getrecipe">New Recipe</a>
+                  <a class="nav-link" href="{{homepage}}/getrecipe">New Recipe</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="http://127.0.0.1:5000/favorites">Favorites</a>
+                  <a class="nav-link" href="{{homepage}}/favorites">Favorites</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="http://127.0.0.1:5000">Sign out</a>
+                  <a class="nav-link active" aria-current="page" href="{{homepage}}">Sign out</a>
                 </li>
               </ul>
             </div>

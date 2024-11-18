@@ -25,6 +25,9 @@ app = Flask(__name__)
 # Wipe any old and load env variables for db connection
 load_dotenv(override=True)
 
+# Set global homepage variable
+HOMEPAGE = os.environ.get('homepage')
+
 # configure session to have a length of time for timeout after being signed in / setup filesystem for session files
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -52,7 +55,7 @@ def homepage():
         if request.form.getlist("login") != None:
             return redirect("/login")
 
-    return render_template("homepage.html")
+    return render_template("homepage.html", homepage=HOMEPAGE)
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -62,18 +65,18 @@ def register():
         if request.form.getlist("newlogin") != None and request.form.getlist("newlogin") != []:
             return redirect("/login")
         if not request.form.get("username"):
-            return render_template("register.html")
+            return render_template("register.html", homepage=HOMEPAGE)
         if not request.form.get("password"):
-            return render_template("register.html")
+            return render_template("register.html", homepage=HOMEPAGE)
         if not request.form.get("password2"):
-            return render_template("register.html")
+            return render_template("register.html", homepage=HOMEPAGE)
         # check for invalid symbols
         if "'" in (request.form.get("username")) or ";" in (request.form.get("username")):
-            return render_template("registerinvalid.html")
+            return render_template("registerinvalid.html", homepage=HOMEPAGE)
         if "'" in (request.form.get("password")) or ";" in (request.form.get("password")):
-            return render_template("registerinvalid.html")
+            return render_template("registerinvalid.html", homepage=HOMEPAGE)
         if "'" in (request.form.get("password2")) or ";" in (request.form.get("password2")):
-            return render_template("registerinvalid.html")
+            return render_template("registerinvalid.html", homepage=HOMEPAGE)
 
         # check if password and verify password entries match 
         if request.form.get("password") == request.form.get("password2"):
@@ -91,7 +94,7 @@ def register():
                 print(usernames)
                 if (username,) in usernames:
                     print("testtest")
-                    return render_template("registeruserexists.html")
+                    return render_template("registeruserexists.html", homepage=HOMEPAGE)
                 # if user does not already exist in db - add new user into table 
                 username = request.form.get("username")
                 passwordhash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
@@ -108,9 +111,9 @@ def register():
                     cursor.close()
                     connection.close()
                     print("PostgreSQL connection is closed")
-            return render_template("registerloggedin.html")
+            return render_template("registerloggedin.html", homepage=HOMEPAGE)
     
-    return render_template("register.html")
+    return render_template("register.html", homepage=HOMEPAGE)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -122,9 +125,9 @@ def login():
         passinput = request.form.get("password")
         # check for invalid symbols
         if "'" in userinput or ";" in userinput:
-            return render_template("logininvalid.html")
+            return render_template("logininvalid.html", homepage=HOMEPAGE)
         if "'" in passinput or ";" in passinput:
-            return render_template("logininvalid.html")
+            return render_template("logininvalid.html", homepage=HOMEPAGE)
         # store username into session
         session["name"] = request.form.get("username")
 
@@ -144,11 +147,11 @@ def login():
                 passwordhash = cursor.fetchall()
                 # check if user exists in db
                 if (userinput,) not in username:
-                    return render_template("loginnotfound.html")
+                    return render_template("loginnotfound.html", homepage=HOMEPAGE)
                 # passwordhash returns from db as a list of tuple - index [0] [0] to get str
                 # check if user password is correct
                 if not check_password_hash(passwordhash[0][0], passinput):
-                    return render_template("loginpassnotfound.html")
+                    return render_template("loginpassnotfound.html", homepage=HOMEPAGE)
                 # if username and password match db log user in
                 #return redirect("/profile")
                 return redirect("/getrecipe")
@@ -166,12 +169,16 @@ def login():
         # login / send to homepage if user exists
         #if (session["name"],) in username:
         #    return redirect("/layout")
-    return render_template("login.html")
+    return render_template("login.html", homepage=HOMEPAGE)
 
 
 @app.route("/profile", methods=["POST", "GET"])
 @login_required
 def profile():
+    #homepage = os.environ.get('homepage')
+    print("------------------")
+    print(HOMEPAGE)
+
     if request.method == "POST":
         # if user selects new recipe after saving profile
         if request.form.getlist("newrecipe") != None and request.form.getlist("newrecipe") != []:
@@ -231,7 +238,7 @@ def profile():
                 
         except (Exception, Error) as error:
                 print("Error while connecting to PostgreSQL", error)
-                return render_template("profilesettingsdatabaseerror.html", user=session["name"])
+                return render_template("profilesettingsdatabaseerror.html", homepage=HOMEPAGE, user=session["name"])
 
         finally:
             if (connection):
@@ -320,16 +327,16 @@ def profile():
                     print(allergiesdict)
                     if request.method == "POST":
                         
-                        return render_template("profilesettingsfilledupsaved.html", allergies=allergiesdict, user=session["name"], diet=diet)
+                        return render_template("profilesettingsfilledupsaved.html", homepage=HOMEPAGE, allergies=allergiesdict, user=session["name"], diet=diet)
 
-                    return render_template("profilesettingsfilledup.html", allergies=allergiesdict, user=session["name"], diet=diet)
+                    return render_template("profilesettingsfilledup.html", homepage=HOMEPAGE, allergies=allergiesdict, user=session["name"], diet=diet)
 
                  
                 
                 
     except (Exception, Error) as error:
             print("Error while connecting to PostgreSQL", error)
-            return render_template("profilesettingsdatabaseerror2.html", user=session["name"])
+            return render_template("profilesettingsdatabaseerror2.html", homepage=HOMEPAGE, user=session["name"])
 
     finally:
         if (connection):
@@ -337,7 +344,7 @@ def profile():
             connection.close()
             print("PostgreSQL connection is closed")
     # render default profilesettings without any selected
-    return render_template("profilesettings.html", user=session["name"])   
+    return render_template("profilesettings.html", homepage=HOMEPAGE, user=session["name"])   
 
 
 @app.route("/getrecipe", methods=["POST", "GET"])
@@ -446,13 +453,13 @@ def getrecipe():
                     try:
                         return api_request(os.environ.get('api_key3'), newstring, diet)
                     except:
-                        return render_template("noapicallsleftonapikey.html")
+                        return render_template("noapicallsleftonapikey.html", homepage=HOMEPAGE)
                     
                     
                     
         except (Exception, Error) as error:
                 print("Error while connecting to PostgreSQL", error)
-                return render_template("profilesettingsdatabaseerror2.html", user=session["name"])
+                return render_template("profilesettingsdatabaseerror2.html", homepage=HOMEPAGE, user=session["name"])
 
         finally:
             if (connection):
@@ -464,7 +471,7 @@ def getrecipe():
        
     # Get request    
     
-    return render_template("getrecipe.html")
+    return render_template("getrecipe.html", homepage=HOMEPAGE)
 
 
 @app.route("/favorites", methods=["GET"])
@@ -489,10 +496,10 @@ def favorites():
                     print(favorites)
                     print(favorites[0][0])
                 else:
-                    return render_template("favoritesnone.html", user=session["name"])
+                    return render_template("favoritesnone.html", homepage=HOMEPAGE, user=session["name"])
     except (Exception, Error) as error:
         print("Error while connecting to PostgreSQL", error)
-        return render_template("favoritesdatabaseerror.html", user=session["name"])
+        return render_template("favoritesdatabaseerror.html", homepage=HOMEPAGE, user=session["name"])
 
     finally:
         if (connection):
@@ -501,7 +508,7 @@ def favorites():
             print("PostgreSQL connection is closed")
     
     print(favorites)
-    return render_template("favorites.html", favorites=favorites, user=session["name"])
+    return render_template("favorites.html", homepage=HOMEPAGE, favorites=favorites, user=session["name"])
 
 
 
@@ -522,7 +529,7 @@ def api_request(apikey, newstring, diet):
     cuisinelist = ["","African", "American","British","Cajun","Caribbean","Chinese","Eastern European","European","French","German","Greek","Indian","Irish","Italian","Japanese","Jewish","Korean","Latin American","Mediterranean","Mexican","Middle Eastern","NordicSouthern","Spanish","Thai","Vietnamese"]
     # if cuisine entered from user is not supported render invalid template
     if string.capwords(cuisine) not in cuisinelist:
-        return render_template("getrecipecuisinenotvalid.html")
+        return render_template("getrecipecuisinenotvalid.html", homepage=HOMEPAGE)
     
     print(newstring)
     print(diet)
@@ -537,7 +544,7 @@ def api_request(apikey, newstring, diet):
         url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&diet=%s" % (apikey, cuisine, newstring, diet)
     # if none return getrecipe.html
     else:
-        return render_template("getrecipesaved.html")
+        return render_template("getrecipesaved.html", homepage=HOMEPAGE)
 
     print(request.form.getlist("main"))
     print(request.form.getlist("desert"))
@@ -559,7 +566,7 @@ def api_request(apikey, newstring, diet):
     # get random recipe from list of recipes
     # if results is empty return no recipes found within profile settings
     if recipes == []:
-        return render_template("getrecipenotfound.html")
+        return render_template("getrecipenotfound.html", homepage=HOMEPAGE)
     randomrecipe = random.choice(recipes)
     # get recipe id from random recipe
     newrecipeid = randomrecipe["id"]
@@ -614,4 +621,4 @@ def api_request(apikey, newstring, diet):
     todays_date = str(todays_date.day) + '-' + str(todays_date.month) + '-' + str(todays_date.year)
     session["date"] = (todays_date)
 
-    return render_template("getrecipefilled.html", image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
+    return render_template("getrecipefilled.html", homepage=HOMEPAGE, image=newrecipeimg, title=newrecipetitle, link=source, nutrition=nutritionlist, cuisine=cuisine, ingredients=ingredientslist)
