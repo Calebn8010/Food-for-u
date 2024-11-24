@@ -37,7 +37,6 @@ Session(app)
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(session)
         if session.get("name") is None:
             return redirect("/")
         return f(*args, **kwargs)
@@ -46,7 +45,6 @@ def login_required(f):
 @app.route("/", methods=["POST", "GET"])
 def homepage():
     session.clear()
-    print(session)
     if request.method == "POST":
         # if user selects register button show register page
         if request.form.getlist("register") != None and request.form.getlist("register") != []:
@@ -90,10 +88,8 @@ def register():
                 # Get / check usernames already created / stored in db
                 cursor.execute("""SELECT username FROM users;""")
                 usernames = cursor.fetchall()
-                print(username)
-                print(usernames)
+
                 if (username,) in usernames:
-                    print("testtest")
                     return render_template("registeruserexists.html", homepage=HOMEPAGE)
                 # if user does not already exist in db - add new user into table 
                 username = request.form.get("username")
@@ -141,7 +137,7 @@ def login():
                 # get usernames from db
                 cursor.execute("""SELECT username FROM users;""")
                 username = cursor.fetchall()
-                print(username)
+            
                 # get passwordhash from db for username
                 cursor.execute("""SELECT passwordhash FROM users WHERE username=%s;""", (session["name"],))
                 passwordhash = cursor.fetchall()
@@ -175,16 +171,11 @@ def login():
 @app.route("/profile", methods=["POST", "GET"])
 @login_required
 def profile():
-    #homepage = os.environ.get('homepage')
-    print("------------------")
-    print(HOMEPAGE)
-
     if request.method == "POST":
         # if user selects new recipe after saving profile
         if request.form.getlist("newrecipe") != None and request.form.getlist("newrecipe") != []:
             return redirect("/getrecipe")
         
-        print(request.form)
         # condition 1: user has never saved allergies - insert into db
         # condition 2: user has saved allergies but wants to update using save button - update db
         # get current allergy selections testing template
@@ -199,7 +190,6 @@ def profile():
         counter = 0
         # loop over each allergy item and convert list of dictionary to true if user selected allergy
         for item in allergies:
-            print(counter)
             # get user selection from check box form
             if request.form.get(list(item.keys())[0]) == "":
                 allergies[counter][list(item.keys())[0]] = True
@@ -223,7 +213,6 @@ def profile():
                 # get usernames from db
                 cursor.execute("""SELECT username FROM profile;""")
                 usernames = cursor.fetchall()
-                print(usernames)
 
                 if (session["name"],) in usernames:
                     # Update allergies 
@@ -232,7 +221,6 @@ def profile():
                 
                 else:
                     # Insert allergies 
-                    print(session["name"])
                     cursor.execute("""INSERT INTO profile (username, diet, dairy, peanut, gluten, egg, seafood, grains, shellfish, sesame, soy, wheat, corn, tree_nut) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (session["name"], diet, allergies[0]["dairy"], allergies[1]["peanut"], allergies[2]["gluten"], allergies[3]["egg"], allergies[4]["seafood"], allergies[5]["grains"], allergies[6]["shellfish"], allergies[7]["sesame"], allergies[9]["soy"], allergies[10]["wheat"], allergies[11]["corn"], allergies[8]["treenut"],))
                     connection.commit()
                 
@@ -246,19 +234,11 @@ def profile():
                 connection.close()
                 print("PostgreSQL connection is closed")
 
-
-
         dairy = request.form.get("Dairy")
-        #print(request.form.getlist())
-        if dairy == "":
-            print("test123")
-        #print(type(checked))
-        print("test")
 
         #return render_template("profilesettings.html", user=session["name"])
 
     # For Get request:
-    print()
 
     # check if user already has allergies selected - if so then render template profilesettingsfilled
     #return render_template("profilesettingsfilled.html")
@@ -272,10 +252,8 @@ def profile():
                 # get usernames from db
                 cursor.execute("""SELECT username FROM profile;""")
                 usernames = cursor.fetchall()
-                print(usernames)
                 
                 if (session["name"],) in usernames:
-                    print("i'm in the db")
                     # get current allergies for user to fill in check boxs for html page
                     cursor.execute("""SELECT * FROM profile WHERE username = %s;""", (session["name"],))
                     allergies = cursor.fetchall()
@@ -286,24 +264,12 @@ def profile():
                     # previous code for jinja html forloop 
                     # allergiesdict = [{"allergy":"Dairy","checked":False}, {"allergy":"Peanut","checked":False}, {"allergy":"Gluten","checked":False}, {"allergy":"Egg","checked":False}, {"allergy":"Seafood","checked":False}, {"allergy":"Grains","checked":False}, {"allergy":"Shellfish","checked":False}, {"allergy":"Sesame","checked":False}, {"allergy":"Soy","checked":False}, {"allergy":"Wheat","checked":False}, {"allergy":"Corn","checked":False}, {"allergy":"Tree Nut","checked":False}]
                     # allergieslist = []
-                    print("291")
-                    print(allergies)
                     # mod db list for only checkbox items
-                    #allergies.pop(0)
-                    #allergies.pop()
-                    #allergies = tuple(allergies)
-                    
-                    print(allergies)
-                    print(type(allergies[0][0]))
-                    print(type(allergies[0][1]))
-                    print(type(allergies[0][2]))
-                    print(type(allergies[0][3]))
+                
                     allergiesdict = [{"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}, {"checked":False}]
                     diet = None
                     counter = 0
                     for item in allergies[0]:
-                        print(item)
-                        print(type(item))
                         if type(item) == int:
                             continue
                         # get only allergies from list of alergies db table
@@ -321,10 +287,6 @@ def profile():
                         if item != None and counter == 0:
                             diet = item
                             
-                            
-                        
-                    print(diet)        
-                    print(allergiesdict)
                     if request.method == "POST":
                         
                         return render_template("profilesettingsfilledupsaved.html", homepage=HOMEPAGE, allergies=allergiesdict, user=session["name"], diet=diet)
@@ -361,10 +323,6 @@ def getrecipe():
             return redirect("/favorites")
         # if user selects save to favorites button insert recipe id into favorites db table and return user to getrecipe.html
         if request.form.getlist("save") != None and request.form.getlist("save") != []:
-            print("save")
-            print(session["recipe"])
-            #print(request.session)
-
             # connect to db and insert current recipe information 
             try:
                 # Connect to heroku hosted database \ any db in .env config
@@ -401,10 +359,8 @@ def getrecipe():
             # get usernames from db
             cursor.execute("""SELECT username FROM profile;""")
             usernames = cursor.fetchall()
-            print(usernames)
             
             if (session["name"],) in usernames:
-                print("i'm in the db")
                 # get current allergies for user to fill in check boxs for html page
                 cursor.execute("""SELECT * FROM profile WHERE username = %s;""", (session["name"],))
                 profile = cursor.fetchall()
@@ -430,11 +386,7 @@ def getrecipe():
                         else:
                             newstring = f"{newstring}, {dictionary[counter]}"
                     counter += 1
-                print(profile)    
-                print(diet)
-                if diet:
-                    print("true")
-                print(newstring)
+
                 #return render_template("profilesettingsfilledup.html", allergies=allergiesdict, user=session["name"])
                 # if user is not in profile db table - set to default
             else:
@@ -488,13 +440,12 @@ def favorites():
                 # get usernames from db
                 cursor.execute("""SELECT username FROM favorites;""")
                 usernames = cursor.fetchall()
-                print(usernames)
+                
                 if (session["name"],) in usernames:
                     # get list of favorites for current user 
                     cursor.execute("""SELECT * FROM favorites WHERE username = %s;""", (session["name"],))
                     favorites = cursor.fetchall()
-                    print(favorites)
-                    print(favorites[0][0])
+                    
                 else:
                     return render_template("favoritesnone.html", homepage=HOMEPAGE, user=session["name"])
     except (Exception, Error) as error:
@@ -507,7 +458,6 @@ def favorites():
             connection.close()
             print("PostgreSQL connection is closed")
     
-    print(favorites)
     return render_template("favorites.html", homepage=HOMEPAGE, favorites=favorites, user=session["name"])
 
 
@@ -523,7 +473,6 @@ def connectdb():
 
 
 def api_request(apikey, newstring, diet):
-    print(apikey)
     # get cuisine input from user
     cuisine = request.form.get("cuisine")
     cuisinelist = ["","African", "American","British","Cajun","Caribbean","Chinese","Eastern European","European","French","German","Greek","Indian","Irish","Italian","Japanese","Jewish","Korean","Latin American","Mediterranean","Mexican","Middle Eastern","NordicSouthern","Spanish","Thai","Vietnamese"]
@@ -531,8 +480,6 @@ def api_request(apikey, newstring, diet):
     if string.capwords(cuisine) not in cuisinelist:
         return render_template("getrecipecuisinenotvalid.html", homepage=HOMEPAGE)
     
-    print(newstring)
-    print(diet)
     # if user selects new main dish button change api url
     if request.form.getlist("main") != None and request.form.getlist("main") != []:
         url1 =  "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s&type=main course&diet=%s" % (apikey, cuisine, newstring, diet)
@@ -546,18 +493,9 @@ def api_request(apikey, newstring, diet):
     else:
         return render_template("getrecipesaved.html", homepage=HOMEPAGE)
 
-    print(request.form.getlist("main"))
-    print(request.form.getlist("desert"))
-    print(request.form.getlist("suprise"))
-    print(url1)
-    
-
-    
-    print(type(cuisine))
-    
     # get list of cuisine excluding recipes that contain users intolerances - old
     #url1 = "https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&number=100&intolerances=%s" % (apikey, cuisine, newstring) #note: add in query variable in place of american
-    print(url1)
+    
     response = requests.get(url1)
     # get list of dictionaries from api using json function
     recipes = response.json()
@@ -570,29 +508,25 @@ def api_request(apikey, newstring, diet):
     randomrecipe = random.choice(recipes)
     # get recipe id from random recipe
     newrecipeid = randomrecipe["id"]
-    print(newrecipeid)
-    print("test2")
+    
     # get image from random recipe
     newrecipeimg = randomrecipe["image"]
-    print(newrecipeimg)
+    
     # get title of recipe
     newrecipetitle = randomrecipe["title"]
-    print(newrecipetitle)
-
+   
     # get recipe information for id selected https://api.spoonacular.com/recipes/632342/information?apiKey=
     url2 = "https://api.spoonacular.com/recipes/%s/information?apiKey=%s" % (newrecipeid, apikey)
-    print(url2)
     response2 = requests.get(url2)
     source = (response2.json())["sourceUrl"]
-    print(source)
+   
     #img = (response2.json())[""]
     # get recipe nutritional information 
     url3 = "https://api.spoonacular.com/recipes/%s//nutritionWidget.json?apiKey=%s" % (newrecipeid, apikey)
     response3 = requests.get(url3)
     nutrition = response3.json()
     nutritionlist = [nutrition["calories"], nutrition["carbs"], nutrition["fat"], nutrition["protein"]]
-    print(nutritionlist)
-
+   
     # get recipe ingredients for id selected  https://api.spoonacular.com/recipes/1003464/ingredientWidget.json?
     url4 = "https://api.spoonacular.com/recipes/%s/ingredientWidget.json?apiKey=%s" % (newrecipeid, apikey)
     response4 = requests.get(url4)
@@ -605,8 +539,6 @@ def api_request(apikey, newstring, diet):
         # get current ingredient, convert to first letter capital then insert into list of ingredients
         ingredientslist.append((item["name"]).capitalize())
         
-    print(ingredientslist)
-    print(url4)
     # set current session recipe 
     session["recipe"] = newrecipeid
     # set current session recipe image
