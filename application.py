@@ -20,7 +20,7 @@ import string
 # import gotenv library for environment variables
 from dotenv import load_dotenv, dotenv_values # type: ignore
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 # Wipe any old and load env variables for db connection
 load_dotenv(override=True)
@@ -29,9 +29,9 @@ load_dotenv(override=True)
 HOMEPAGE = os.environ.get('homepage')
 
 # configure session to have a length of time for timeout after being signed in / setup filesystem for session files
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+application.config["SESSION_PERMANENT"] = False
+application.config["SESSION_TYPE"] = "filesystem"
+Session(application)
 
 # set up login required function / wrapper
 def login_required(f):
