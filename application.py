@@ -42,7 +42,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.route("/", methods=["POST", "GET"])
+@application.route("/", methods=["POST", "GET"])
 def homepage():
     session.clear()
     if request.method == "POST":
@@ -55,7 +55,7 @@ def homepage():
 
     return render_template("homepage.html", homepage=HOMEPAGE)
 
-@app.route("/register", methods=["POST", "GET"])
+@application.route("/register", methods=["POST", "GET"])
 def register():
     session.clear()
     # if user sends input to form add new user to database
@@ -112,7 +112,7 @@ def register():
     return render_template("register.html", homepage=HOMEPAGE)
 
 
-@app.route("/login", methods=["POST", "GET"])
+@application.route("/login", methods=["POST", "GET"])
 def login():
     session.clear()
     # if form is submitted 
@@ -168,7 +168,7 @@ def login():
     return render_template("login.html", homepage=HOMEPAGE)
 
 
-@app.route("/profile", methods=["POST", "GET"])
+@application.route("/profile", methods=["POST", "GET"])
 @login_required
 def profile():
     if request.method == "POST":
@@ -309,7 +309,7 @@ def profile():
     return render_template("profilesettings.html", homepage=HOMEPAGE, user=session["name"])   
 
 
-@app.route("/getrecipe", methods=["POST", "GET"])
+@application.route("/getrecipe", methods=["POST", "GET"])
 @login_required
 def getrecipe():
     # get random recipe with allergies accounted for
@@ -426,7 +426,7 @@ def getrecipe():
     return render_template("getrecipe.html", homepage=HOMEPAGE)
 
 
-@app.route("/favorites", methods=["GET"])
+@application.route("/favorites", methods=["GET"])
 @login_required
 def favorites():
     # for get request, connect to db and get list of favorites for current user 
