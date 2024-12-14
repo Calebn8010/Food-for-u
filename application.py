@@ -17,10 +17,25 @@ import random
 from datetime import date
 # import for first letter caps function
 import string
+# import logging
+import logging
 # import gotenv library for environment variables
 from dotenv import load_dotenv, dotenv_values # type: ignore
 
 application = Flask(__name__)
+
+# Ensure the logs directory exists
+log_dir = os.path.join(application.root_path, 'logs')
+os.makedirs(log_dir, exist_ok=True)
+
+logging.basicConfig(
+    filename=os.path.join(log_dir, 'app.log'),
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+application.logger.info('Test')
 
 # Wipe any old and load env variables for db connection
 load_dotenv(override=True)
