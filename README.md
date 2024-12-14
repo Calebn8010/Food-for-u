@@ -3,6 +3,7 @@
 #### You can check it out here! "https://food-for-u.herokuapp.com/"
 
 # Local setup instructions
+### Make sure to clone the "run_local" branch and not the main branch.
 ### Best to run within a python virtual environment. Make sure to install these python libraries listed in the requirements.txt (pip install -r requirements.txt) once your venv is activated.
 ### Make sure you can start your local host flask server with "flask --app app run". Reference https://flask.palletsprojects.com/en/stable/quickstart/
 ####
