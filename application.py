@@ -167,7 +167,7 @@ def login():
                 #return redirect("/profile")
                 return redirect("/getrecipe")
         except (Exception, Error) as error:
-                print("Error while connecting to PostgreSQL", error)
+                application.logger.info(f'Error while connecting to PostgreSQL:  {error}')
 
         finally:
             if (connection):
