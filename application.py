@@ -103,11 +103,12 @@ def register():
                 # Get / check usernames already created / stored in db
                 cursor.execute("""SELECT username FROM users;""")
                 usernames = cursor.fetchall()
+                # Extract usernames as a flat list
+                usernames_list = [row[0] for row in usernames]
 
-                if (username,) in usernames:
+                if username in usernames_list:  
                     return render_template("registeruserexists.html", homepage=HOMEPAGE)
                 # if user does not already exist in db - add new user into table 
-                username = request.form.get("username")
                 passwordhash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)
                 cursor.execute("""INSERT INTO users (username, passwordhash) VALUES (%s, %s);""", (username, passwordhash))
                 connection.commit()
